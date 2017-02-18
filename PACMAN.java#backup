@@ -1,0 +1,4146 @@
+
+import java.awt.*;
+import java.awt.event.*;
+import java.applet.Applet;
+import javax.swing.*;
+
+public class PACMAN extends Applet implements ActionListener,KeyListener, MouseListener
+{
+    private int pacx,pacy; //starting value of pacman
+    private Timer timer;
+    private int counter=2;
+    private int level=1; // the different levels
+    private int whichway;
+    private int blueghostx,blueghosty; //starting value of blue ghost
+    private int pinkghostx,pinkghosty; // starting value of pink ghost
+    private int orangeghostx, orangeghosty; // starting value of orange ghost
+    private int redghostx, redghosty; // starting value of red ghost
+    private int gowhere; //where the ghosts move randomly
+    private int pinkyInc,pinkxInc,bluexInc,blueyInc,orangexInc,orangeyInc,redxInc,redyInc; // increments of ghosts
+    private Image image, image1, image2, image3;
+    private double time, time1;
+    int x=-200;
+    int y=-200;
+    int pacman;
+    public void init()
+    { 
+
+        pacx=225;  //original position of the x
+        pacy=250; //original position of the y
+        blueghostx=480;
+        blueghosty=0;
+        pinkghostx=20;
+        time=0;
+        time1=0;
+        pinkghosty=0;
+        orangeghostx=20;
+        orangeghosty=460;
+        redghostx=480;
+        redghosty=460;
+        timer=new Timer(10,this);
+        timer.start();
+        ///time=new Timer(15,this);
+        //timer.start();
+        addKeyListener(this);
+        addMouseListener(this);
+        requestFocus();
+        setBackground(Color.BLACK);
+        image=getImage(getDocumentBase(),"1360124243.png");
+        image1=getImage(getDocumentBase(),"ghost1.png");
+        image2=getImage(getDocumentBase(),"Pinkyyghost.png");
+        image3=getImage(getDocumentBase(),"gameover.png");
+    }
+
+    public void mouseExited(MouseEvent me)
+    {
+
+    }
+
+    public void mouseEntered(MouseEvent me)
+    {
+
+    }
+
+    public void mouseReleased(MouseEvent me)
+    {
+
+    }
+
+    public void mousePressed(MouseEvent me)
+    {
+
+    }
+
+    public void mouseClicked(MouseEvent me)
+    {
+        x=me.getX();
+        y=me.getY();
+        repaint();
+    }
+
+    public void keyReleased(KeyEvent evt)
+    {
+
+    }
+
+    public void keyPressed(KeyEvent evt)
+    {
+        pacman=evt.getKeyCode();
+        switch(pacman){
+
+            case(KeyEvent.VK_RIGHT):
+            counter=0;
+            pacx+=5;
+            whichway=1;
+            break;
+            case(KeyEvent.VK_LEFT):
+            pacx-=5;
+            whichway=2;
+            counter=0;
+            break;
+            case(KeyEvent.VK_UP):
+            pacy-=5;
+            whichway=3;
+            counter=0;
+            break;
+            case(KeyEvent.VK_DOWN):
+            pacy+=5;
+            whichway=4;
+            counter=0;
+            break;
+            case(KeyEvent.VK_ESCAPE):
+            level=3;
+            pacx=225;
+            pacy=250;
+            blueghostx=480;
+            blueghosty=0;
+            pinkghostx=20;
+            pinkghosty=0;
+            orangeghostx=20;
+            orangeghosty=460;
+            redghostx=480;
+            redghosty=460;
+            time=0;
+            break;
+        }
+        repaint();
+
+    }
+
+    public void keyTyped(KeyEvent evt)
+    {
+
+    }
+
+    public void actionPerformed(ActionEvent ae){
+        repaint();
+    } 
+
+    public void paint(Graphics g)
+    {
+        if(level==1){
+            setBackground(Color.WHITE);
+            g.drawImage(image,80,220,200,180,this);
+            g.drawImage(image1,320,60,80,80,this);
+            g.drawImage(image2,400,140,80,80,this);
+            g.setFont(new Font("default",Font.BOLD,30));
+            g.setColor(Color.CYAN);
+            g.drawString("Welcome to Pacman",20,30);
+            g.drawString("Click anywhere to go to",20,60);
+            g.drawString("the next page",40,90);
+            if(x>=0 && x<=500 && y>=0 && y<=500){
+                level=2;
+            }
+        }
+        if(level==2){
+            setBackground(Color.BLACK);
+            g.setFont(new Font("default",Font.BOLD,30));
+            g.setColor(Color.WHITE);
+            g.drawString("Welcome to Pacman",75,50);
+            g.setFont(new Font("default",Font.BOLD,15));
+            g.setColor(Color.RED);
+            g.drawString("1. Use arrow keys Up, Down, Right, Left to move the Pacman",20,100);
+            g.drawString("2. Avoid the ghosts to win",20,125);
+            g.drawString("3. First level, survive for thirty seconds",20,150);
+            g.drawString("4. Second level, survive for a minute",20,175);
+            g.drawString("5. Third level, survive for a minute and thirty seconds",20,200);
+            g.setFont(new Font("default",Font.BOLD,20));
+            g.setColor(Color.MAGENTA);
+            g.drawString("CLICK ESCAPE TO PLAY THE GAME",65,300);
+        }
+
+        if(level==3){
+            setBackground(Color.BLACK);
+            if(counter==0){     //alternating pacman
+                if(whichway==1){//face right
+                    g.setColor(Color.YELLOW);       
+                    g.fillArc(pacx,pacy,30,30,20,320);   //pacman facing right
+                    g.setColor(Color.BLACK);      //color of eye
+                    g.fillOval(pacx+15,pacy+6,2,2);     // eyeball
+                }
+                else if(whichway==2){// face left
+                    g.setColor(Color.YELLOW);
+                    g.fillArc(pacx,pacy,30,30,200,320);  //pacman facing left
+                    g.setColor(Color.BLACK);      //color of the eye
+                    g.fillOval(pacx+15,pacy+6,2,2);    //eyeball
+                }
+                else if(whichway==3){// face up
+                    g.setColor(Color.YELLOW);
+                    g.fillArc(pacx,pacy,30,30,110,310);  //pacman facing left
+                    g.setColor(Color.BLACK);      //color of the eye
+                    g.fillOval(pacx+22,pacy+20,2,2);    //eyeball
+                }
+                else if(whichway==4){// face down
+                    g.setColor(Color.YELLOW);
+                    g.fillArc(pacx,pacy,30,30,310,290);  //pacman facing left
+                    g.setColor(Color.BLACK);      //color of the eye
+                    g.fillOval(pacx+22,pacy+8,2,2);    //eyeball
+                }
+            }   
+            else{
+                g.setColor(Color.YELLOW);
+                g.fillOval(pacx,pacy,30,30);    //closed mouth
+                g.setColor(Color.BLACK);       //color of eye
+                g.fillOval(pacx+19,pacy+8,2,2);   //eyeball
+            }
+            g.setColor(Color.WHITE);
+            g.fillRect(200,200,20,80);
+            g.fillRect(260,200,20,80);
+            g.fillRect(40,160,60,160);
+            g.fillRect(140,160,80,40);
+            g.fillRect(140,200,60,80);
+            g.fillRect(140,280,80,40);
+            g.fillRect(380,160,80,160);
+            g.fillRect(260,160,80,40);
+            g.fillRect(280,200,60,80);
+            g.fillRect(260,280,80,40);
+            g.fillRect(40,360,60,100);
+            g.fillRect(140,360,80,100);
+            g.fillRect(260,360,80,100);
+            g.fillRect(380,360,80,100);
+            g.fillRect(40,40,60,80);
+            g.fillRect(140,40,80,80);
+            g.fillRect(260,40,80,80);
+            g.fillRect(380,40,80,80);
+            g.setColor(Color.BLUE);
+            Polygon blueGhost=new Polygon();
+            blueGhost.addPoint(blueghostx,blueghosty);
+            blueGhost.addPoint(blueghostx+20,blueghosty+10);
+            blueGhost.addPoint(blueghostx+10,blueghosty+40);
+            blueGhost.addPoint(blueghostx,blueghosty+20);
+            blueGhost.addPoint(blueghostx-10,blueghosty+40);
+            blueGhost.addPoint(blueghostx-20,blueghosty+10);
+            g.fillPolygon(blueGhost);
+            g.setColor(Color.PINK);
+            Polygon pinkGhost=new Polygon();
+            pinkGhost.addPoint(pinkghostx,pinkghosty);
+            pinkGhost.addPoint(pinkghostx+20,pinkghosty+10);
+            pinkGhost.addPoint(pinkghostx+10,pinkghosty+40);
+            pinkGhost.addPoint(pinkghostx,pinkghosty+20);
+            pinkGhost.addPoint(pinkghostx-10,pinkghosty+40);
+            pinkGhost.addPoint(pinkghostx-20,pinkghosty+10);
+            g.fillPolygon(pinkGhost);
+            g.setColor(Color.ORANGE);
+            Polygon orangeGhost=new Polygon();
+            orangeGhost.addPoint(orangeghostx,orangeghosty);
+            orangeGhost.addPoint(orangeghostx+20,orangeghosty+10);
+            orangeGhost.addPoint(orangeghostx+10,orangeghosty+40);
+            orangeGhost.addPoint(orangeghostx,orangeghosty+20);
+            orangeGhost.addPoint(orangeghostx-10,orangeghosty+40);
+            orangeGhost.addPoint(orangeghostx-20,orangeghosty+10);
+            g.fillPolygon(orangeGhost);
+            g.setColor(Color.RED);
+            Polygon redGhost=new Polygon();
+            redGhost.addPoint(redghostx,redghosty);
+            redGhost.addPoint(redghostx+20,redghosty+10);
+            redGhost.addPoint(redghostx+10,redghosty+40);
+            redGhost.addPoint(redghostx,redghosty+20);
+            redGhost.addPoint(redghostx-10,redghosty+40);
+            redGhost.addPoint(redghostx-20,redghosty+10);
+            g.fillPolygon(redGhost);
+            g.setColor(Color.BLACK);
+            g.fillOval(pinkghostx-10,pinkghosty+10,5,5);// left eye of pink ghost
+            g.fillOval(pinkghostx+5,pinkghosty+10,5,5);// right eye of pink ghost
+            g.fillOval(blueghostx-10,blueghosty+10,5,5);// left eye of blue ghost
+            g.fillOval(blueghostx+5,blueghosty+10,5,5);// right eye of blue ghost
+            g.fillOval(orangeghostx-10,orangeghosty+10,5,5);// left eye of orange ghost
+            g.fillOval(orangeghostx+5,orangeghosty+10,5,5);// right eye of orange ghost
+            g.fillOval(redghostx-10,redghosty+10,5,5);// left eye of red ghost
+            g.fillOval(redghostx+5,redghosty+10,5,5);// right eye of red ghost
+            
+            time=(int)(time*100+.5)/100.0;
+            g.setFont(new Font("default",Font.BOLD,10));        
+            g.drawString("timer="+time,150,180);        
+            time+=.01; 
+            g.drawString("Pacx="+pacx,400,420);
+            g.drawString("Pacy="+pacy,400,440);
+            if(level==3 && time>15){
+                level=6;
+            }
+            //right side of ghost collisons
+            if(pacx<blueghostx && pacx+30-(blueghostx-20)>=0 && pacy>blueghosty && pacy<=blueghosty+40){
+                level=5;
+
+            }
+            if(pacx<pinkghostx && pacx+30-(pinkghostx-20)>=0 && pacy>pinkghosty && pacy<=pinkghosty+40){
+                level=5;
+
+            }
+            if(pacx<orangeghostx && pacx+30-(orangeghostx-20)>=0 && pacy>orangeghosty && pacy<=orangeghosty+40){
+                level=5;
+
+            }
+            if(pacx<redghostx && pacx+30-(redghostx-20)>=0 && pacy>redghosty && pacy<=redghosty+40){
+                level=5;
+
+            }
+            //left side of ghost collisons
+            if(pacx>blueghostx && pacx+30-(blueghostx-20)<=0 && pacy>blueghosty && pacy<=blueghosty+40){
+                level=5;
+            }
+            if(pacx>pinkghostx && pacx+30-(pinkghostx-20)<=0 && pacy>pinkghosty && pacy<=pinkghosty+40){
+                level=5;
+
+            }
+            if(pacx>orangeghostx && pacx+30-(orangeghostx-20)<=0 && pacy>orangeghosty && pacy<=orangeghosty+40){
+                level=5;
+
+            }
+            if(pacx>redghostx && pacx+30-(redghostx-20)<=0 && pacy>redghosty && pacy<=redghosty+40){
+                level=5;
+
+            }
+            // head of  ghost collisons
+            if(pacx>=blueghostx-20 && pacx<=blueghostx+20 && pacy+30==blueghosty && pacy>=blueghosty+40){
+                level=5;
+
+            }
+            if(pacx>=pinkghostx-20 && pacx<=pinkghosty+20 && pacy+30==pinkghosty && pacy>=pinkghosty+40){
+                level=5;
+
+            }
+            if(pacx>=orangeghostx-20 && pacx<=orangeghosty+20 && pacy+30==orangeghosty && pacy>=orangeghosty+40){
+                level=5;
+
+            }
+            if(pacx>=redghostx-20 && pacx<=redghosty+20 && pacy+30==redghosty && pacy>=redghosty+40){
+                level=5;
+
+            }
+            //bottom of ghost collison
+            if(pacx>=blueghostx-20 && pacx<=blueghosty+20 && pacy==blueghosty+40){
+                level=5;
+
+            }
+            if(pacx>=pinkghostx-20 && pacx<=pinkghosty+20 && pacy==pinkghosty+40){
+                level=5;
+
+            }
+            if(pacx>=orangeghostx-20 && pacx<=orangeghosty+20 && pacy==orangeghosty+40){
+                level=5;
+
+            }
+            if(pacx>=redghostx-20 && pacx<=redghosty+20  && pacy==redghosty+40){
+                level=5;
+
+            }
+            //paramters for walls
+            if(pacy>470){
+                pacy-=5;
+            }
+            if(pacy<0){
+                pacy+=5;
+            }
+            if(pacx<0){
+                pacx+=5;
+            }
+            if(pacx>470){
+                pacx-=5;
+            }
+            if(pacx>15 && pacx<95 && pacy==15){
+                pacy-=5;
+            }
+            if(pacx>15 && pacx<95 && pacy==315){
+                pacy+=5;
+            }
+            if(pacy>15 && pacy<115 && pacx==15){
+                pacx-=5;
+            }
+            if(pacx>15 && pacx<95 && pacy==115){
+                pacy+=5;
+            }
+            if(pacy>15 && pacy<115 && pacx==95){
+                pacx+=5;
+            }
+            if(pacx>115 && pacx<215 && pacy==15){
+                pacy-=5;
+            }
+            if(pacy>15 && pacy<115 && pacx==115){
+                pacx-=5;
+            }
+            if(pacy>15 && pacy<115 && pacx==215){
+                pacx+=5;
+            }
+            if(pacx>115 && pacx<215 && pacy==115){
+                pacy+=5;
+            }
+            if(pacx>235 && pacx<335 && pacy==115){
+                pacy+=5;
+            }
+            if(pacx>355 && pacx<455 && pacy==115){
+                pacy+=5;
+            }
+            if(pacy>15 && pacy<115 && pacx==235){
+                pacx-=5;
+            }
+            if(pacy>15 && pacy<115 && pacx==355){
+                pacx-=5;
+            }
+            if(pacx>235 && pacx<335 && pacy==15){
+                pacy-=5;
+            }
+            if(pacx>355 && pacx<455 && pacy==15){
+                pacy-=5;
+            }
+            if(pacy>15 && pacy<115 && pacx==335){
+                pacx+=5;
+            }
+            if(pacy>15 && pacy<115 && pacx==455){
+                pacx+=5;
+            }
+            if(pacy>135 && pacy<315 && pacx==15){
+                pacx-=5;
+            }
+            if(pacy>135 && pacy<315 && pacx==115){
+                pacx-=5;
+            }
+            if(pacy>135 && pacy<315 && pacx==235){
+                pacx-=5;
+            }
+            if(pacy>135 && pacy<315 && pacx==355){
+                pacx-=5;
+            }
+            if(pacx>15 && pacx<95 && pacy==135){
+                pacy-=5;
+            }
+            if(pacx>115 && pacx<215 && pacy==135){
+                pacy-=5;
+            }
+            if(pacx>235 && pacx<335 && pacy==135){
+                pacy-=5;
+            }
+            if(pacx>355 && pacx<455 && pacy==135){
+                pacy-=5;
+            }
+            if(pacy>135 && pacy<315 && pacx==95){
+                pacx+=5;
+            }
+            if(pacy>135 && pacy<315 && pacx==215){
+                pacx+=5;
+            }
+            if(pacy>135 && pacy<315 && pacx==335){
+                pacx+=5;
+            }
+            if(pacy>135 && pacy<315 && pacx==455){
+                pacx+=5;
+            }
+            if(pacx>115 && pacx<215 && pacy==315){
+                pacy+=5;
+            }
+            if(pacx>235 && pacx<335 && pacy==315){
+                pacy+=5;
+            }
+            if(pacx>355 && pacx<455 && pacy==315){
+                pacy+=5;
+            }
+            if(pacy>335 && pacy<455 && pacx==15){
+                pacx-=5;
+            }
+            if(pacy>335 && pacy<455 && pacx==115){
+                pacx-=5;
+            }
+            if(pacy>335 && pacy<455 && pacx==235){
+                pacx-=5;
+            }
+            if(pacy>335 && pacy<455 && pacx==355){
+                pacx-=5;
+            }
+            if(pacy>335 && pacy<455 && pacx==95){
+                pacx+=5;
+            }
+            if(pacy>335 && pacy<455 && pacx==215){
+                pacx+=5;
+            }
+            if(pacy>335 && pacy<455 && pacx==455){
+                pacx+=5;
+            }
+            if(pacx>15 && pacx<95 && pacy==335){
+                pacy-=5;
+            }
+            if(pacx>115 && pacx<215 && pacy==335){
+                pacy-=5;
+            }
+            if(pacx>235 && pacx<340 && pacy==335){
+                pacy-=5;
+            }
+            if(pacx>355 && pacx<455 && pacy==335){
+                pacy-=5;
+            }
+            if(pacx>15 && pacx<95 && pacy==455){
+                pacy+=5;
+            }
+            if(pacx>115 && pacx<215 && pacy==455){
+                pacy+=5;
+            }
+            if(pacx>235 && pacx<335 && pacy==455){
+                pacy+=5;
+            }
+            if(pacy>335 && pacy<455 && pacx==335){
+                pacx+=5;
+            }
+            if(pacx>355 && pacx<455 && pacy==455){
+                pacy+=5;
+            }
+        } 
+       if(level==4){
+            setBackground(Color.WHITE);
+            g.drawImage(image3,0,0,500,500,this); 
+        }
+        //random movement for pink ghost at every intersection
+       if(pinkghostx==20 && pinkghostx+20<=40 && pinkghosty==0 && pinkghosty+40<=40){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                
+                
+            }
+            if(pinkghostx-20==100 && pinkghostx+20<=140 && pinkghosty==0 && pinkghosty+40<=40){
+                gowhere=(int)(Math.random()*3+1);
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+            
+            }
+            if(pinkghostx-20==220 && pinkghostx+20<=260 && pinkghosty==0 && pinkghosty+40<=40){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+            
+            }
+            if(pinkghostx-20==340 && pinkghostx+20<=380 && pinkghosty==0 && pinkghosty+40<=40){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+            
+            }
+            if(pinkghostx==480 && pinkghostx+20<=500 && pinkghosty==0 && pinkghosty+40<=40){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                
+                
+            }
+            if(pinkghostx-20==0 && pinkghostx+20<=40 && pinkghosty==120 && pinkghosty+40<=160){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                
+                
+            }
+            if(pinkghostx-20==100 && pinkghostx+20<=140 && pinkghosty==120 && pinkghosty+40<=160){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==4){
+                    pinkxInc=0;
+                    pinkyInc=-2;
+
+                }
+            
+            }
+            if(pinkghostx-20==220 && pinkghostx+20<=260 && pinkghosty==120 && pinkghosty+40<=160){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==4){
+                    pinkxInc=0;
+                    pinkyInc=-2;
+
+                }
+            
+            }
+            if(pinkghostx-20==340 && pinkghostx+20<=380 && pinkghosty==120 && pinkghosty+40<=160){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==4){
+                    pinkxInc=0;
+                    pinkyInc=-2;
+
+                }
+
+            
+            }
+            if(pinkghostx==480 && pinkghostx+20<=500 && pinkghosty==120 && pinkghosty+40<=160){
+                gowhere=(int)(Math.random()*3+1);
+                if(gowhere==1){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                
+                
+            }
+            if(pinkghostx-20==0 && pinkghostx+20<=40 && pinkghosty==320 && pinkghosty+40<=360){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                
+             
+            }
+            if(pinkghostx-20==100 && pinkghostx+20<=140 && pinkghosty==320 && pinkghosty+40<=360){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==4){
+                    pinkxInc=0;
+                    pinkyInc=-2;
+
+                }
+            
+            }
+            if(pinkghostx-20==220 && pinkghostx+20<=260 && pinkghosty==320 && pinkghosty+40<=360){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==4){
+                    pinkxInc=0;
+                    pinkyInc=-2;
+
+                }
+            
+            }
+            if(pinkghostx-20==340 && pinkghostx+20<=380 && pinkghosty==320 && pinkghosty+40<=360){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==4){
+                    pinkxInc=0;
+                    pinkyInc=-2;
+
+                }
+
+            
+            }
+            if(pinkghostx==480 && pinkghostx+20<=500 && pinkghosty==320 && pinkghosty+40<=360){
+                gowhere=(int)(Math.random()*3+1);
+                if(gowhere==1){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                
+                
+            }
+            if(pinkghostx==20 && pinkghostx+20<=40 && pinkghosty==460 && pinkghosty+40<=500){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=-2;
+
+                }
+                
+                
+            }
+            if(pinkghostx-20==100 && pinkghostx+20<=140 && pinkghosty==460 && pinkghosty+40<=500){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=-2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+            
+            }
+            if(pinkghostx-20==220 && pinkghostx+20<=260 && pinkghosty==460 && pinkghosty+40<=500){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=-2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+            
+            }
+            if(pinkghostx-20==340 && pinkghostx+20<=380 && pinkghosty==460 && pinkghosty+40<=500){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=-2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+            
+            }
+            if(pinkghostx==480 && pinkghostx+20<=500 && pinkghosty==460 && pinkghosty+40<=500){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=-2;
+
+                }
+                
+                
+            }
+            if(blueghostx==20 && blueghostx+20<=40 && blueghosty==0 && blueghosty+40<=40){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                
+                
+            }
+            
+            if(blueghostx-20==100 && blueghostx+20<=140 && blueghosty==0 && blueghosty+40<=40){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+            
+            }
+            if(blueghostx-20==220 && blueghostx+20<=260 && blueghosty==0 && blueghosty+40<=40){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+            
+            }
+            if(blueghostx-20==340 && blueghostx+20<=380 && blueghosty==0 && blueghosty+40<=40){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+            
+            }
+            if(blueghostx==480 && blueghostx+20<=500 && blueghosty==0 && blueghosty+40<=40){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                
+                
+            }
+            if(blueghostx-20==0 && blueghostx+20<=40 && blueghosty==120 && blueghosty+40<=160){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                
+                
+            }
+            if(blueghostx-20==100 && blueghostx+20<=140 && blueghosty==120 && blueghosty+40<=160){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==4){
+                    bluexInc=0;
+                    blueyInc=-2;
+
+                }
+            
+            }
+            if(blueghostx-20==220 && blueghostx+20<=260 && blueghosty==120 && blueghosty+40<=160){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==4){
+                    bluexInc=0;
+                    blueyInc=-2;
+
+                }
+            
+            }
+            if(blueghostx-20==340 && blueghostx+20<=380 && blueghosty==120 && blueghosty+40<=160){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==4){
+                    bluexInc=0;
+                    blueyInc=-2;
+
+                }
+
+            
+            }
+            if(blueghostx==480 && blueghostx+20<=500 && blueghosty==120 && blueghosty+40<=160){
+                gowhere=(int)(Math.random()*3+1);
+                if(gowhere==1){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                
+                
+            }
+            if(blueghostx-20==0 && blueghostx+20<=40 && blueghosty==320 && blueghosty+40<=360){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                
+                
+            }
+            if(blueghostx-20==100 && blueghostx+20<=140 && blueghosty==320 && blueghosty+40<=360){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==4){
+                    bluexInc=0;
+                    blueyInc=-2;
+
+                }
+            
+            }
+            if(blueghostx-20==220 && blueghostx+20<=260 && blueghosty==320 && blueghosty+40<=360){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==4){
+                    bluexInc=0;
+                    blueyInc=-2;
+
+                }
+            
+            }
+            if(blueghostx-20==340 && blueghostx+20<=380 && blueghosty==320 && blueghosty+40<=360){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==4){
+                    bluexInc=0;
+                    blueyInc=-2;
+
+                }
+
+            
+            }
+            if(blueghostx==480 && blueghostx+20<=500 && blueghosty==320 && blueghosty+40<=360){
+                gowhere=(int)(Math.random()*3+1);
+                if(gowhere==1){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                
+                
+            }
+            if(blueghostx==20 && blueghostx+20<=40 && blueghosty==460 && blueghosty+40<=500){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=-2;
+
+                }
+                
+                
+            }
+            if(blueghostx-20==100 && blueghostx+20<=140 && blueghosty==460 && blueghosty+40<=500){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=-2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+            
+            }
+            if(blueghostx-20==220 && blueghostx+20<=260 && blueghosty==460 && blueghosty+40<=500){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=-2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+            
+            }
+            if(blueghostx-20==340 && blueghostx+20<=380 && blueghosty==460 && blueghosty+40<=500){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=-2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+            
+            }
+            if(blueghostx==480 && blueghostx+20<=500 && blueghosty==460 && blueghosty+40<=500){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=-2;
+
+                }
+                
+                
+            }if(orangeghostx==20 && orangeghostx+20<=40 && orangeghosty==0 && orangeghosty+40<=40){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+
+            }
+            if(orangeghostx-20==100 && orangeghostx+20<=140 && orangeghosty==0 && orangeghosty+40<=40){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+
+            }
+            if(orangeghostx-20==220 && orangeghostx+20<=260 && orangeghosty==0 && orangeghosty+40<=40){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+
+            }
+            if(orangeghostx-20==340 && orangeghostx+20<=380 && orangeghosty==0 && orangeghosty+40<=40){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+
+            }
+            if(orangeghostx==480 && orangeghostx+20<=500 && orangeghosty==0 && orangeghosty+40<=40){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+
+            }
+            if(orangeghostx-20==0 && orangeghostx+20<=40 && orangeghosty==120 && orangeghosty+40<=160){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+
+            }
+            if(orangeghostx-20==100 && orangeghostx+20<=140 && orangeghosty==120 && orangeghosty+40<=160){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==4){
+                    orangexInc=0;
+                    orangeyInc=-2;
+
+                }
+
+            }
+            if(orangeghostx-20==220 && orangeghostx+20<=260 && orangeghosty==120 && orangeghosty+40<=160){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==4){
+                    orangexInc=0;
+                    orangeyInc=-2;
+
+                }
+
+            }
+            if(orangeghostx-20==340 && orangeghostx+20<=380 && orangeghosty==120 && orangeghosty+40<=160){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==4){
+                    orangexInc=0;
+                    orangeyInc=-2;
+
+                }
+
+            }
+            if(orangeghostx==480 && orangeghostx+20<=500 && orangeghosty==120 && orangeghosty+40<=160){
+                gowhere=(int)(Math.random()*3+1);
+                if(gowhere==1){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+
+            }
+            if(orangeghostx-20==0 && orangeghostx+20<=40 && orangeghosty==320 && orangeghosty+40<=360){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+
+            }
+            if(orangeghostx-20==100 && orangeghostx+20<=140 && orangeghosty==320 && orangeghosty+40<=360){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==4){
+                    orangexInc=0;
+                    orangeyInc=-2;
+
+                }
+
+            }
+            if(orangeghostx-20==220 && orangeghostx+20<=260 && orangeghosty==320 && orangeghosty+40<=360){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==4){
+                    orangexInc=0;
+                    orangeyInc=-2;
+
+                }
+
+            }
+            if(orangeghostx-20==340 && orangeghostx+20<=380 && orangeghosty==320 && orangeghosty+40<=360){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==4){
+                    orangexInc=0;
+                    orangeyInc=-2;
+
+                }
+
+            }
+            if(orangeghostx==480 && orangeghostx+20<=500 && orangeghosty==320 && orangeghosty+40<=360){
+                gowhere=(int)(Math.random()*3+1);
+                if(gowhere==1){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+
+            }
+            if(orangeghostx==20 && orangeghostx+20<=40 && orangeghosty==460 && orangeghosty+40<=500){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=-2;
+
+                }
+
+            }
+            if(orangeghostx-20==100 && orangeghostx+20<=140 && orangeghosty==460 && orangeghosty+40<=500){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=-2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+
+            }
+            if(orangeghostx-20==220 && orangeghostx+20<=260 && orangeghosty==460 && orangeghosty+40<=500){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=-2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+
+            }
+            if(orangeghostx-20==340 && orangeghostx+20<=380 && orangeghosty==460 && orangeghosty+40<=500){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=-2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+
+            }
+            if(orangeghostx==480 && orangeghostx+20<=500 && orangeghosty==460 && orangeghosty+40<=500){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=-2;
+
+                }
+
+            }
+            if(redghostx==20 && redghostx+20<=40 && redghosty==0 && redghosty+40<=40){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+
+            }
+            if(redghostx-20==100 && redghostx+20<=140 && redghosty==0 && redghosty+40<=40){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+
+            }
+            if(redghostx-20==220 && redghostx+20<=260 && redghosty==0 && redghosty+40<=40){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+
+            }
+            if(redghostx-20==340 && redghostx+20<=380 && redghosty==0 && redghosty+40<=40){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+
+            }
+            if(redghostx==480 && redghostx+20<=500 && redghosty==0 && redghosty+40<=40){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+
+            }
+            if(redghostx-20==0 && redghostx+20<=40 && redghosty==120 && redghosty+40<=160){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+
+            }
+            if(redghostx-20==100 && redghostx+20<=140 && redghosty==120 && redghosty+40<=160){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==4){
+                    redxInc=0;
+                    redyInc=-2;
+
+                }
+
+            }
+            if(redghostx-20==220 && redghostx+20<=260 && redghosty==120 && redghosty+40<=160){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==4){
+                    redxInc=0;
+                    redyInc=-2;
+
+                }
+
+            }
+            if(redghostx-20==340 && redghostx+20<=380 && redghosty==120 && redghosty+40<=160){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==4){
+                    redxInc=0;
+                    redyInc=-2;
+
+                }
+
+            }
+            if(redghostx==480 && redghostx+20<=500 && redghosty==120 && redghosty+40<=160){
+                gowhere=(int)(Math.random()*3+1);
+                if(gowhere==1){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+
+            }
+            if(redghostx-20==0 && redghostx+20<=40 && redghosty==320 && redghosty+40<=360){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+
+            }
+            if(redghostx-20==100 && redghostx+20<=140 && redghosty==320 && redghosty+40<=360){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==4){
+                    redxInc=0;
+                    redyInc=-2;
+
+                }
+
+            }
+            if(redghostx-20==220 && redghostx+20<=260 && redghosty==320 && redghosty+40<=360){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==4){
+                    redxInc=0;
+                    redyInc=-2;
+
+                }
+
+            }
+            if(redghostx-20==340 && redghostx+20<=380 && redghosty==320 && redghosty+40<=360){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==4){
+                    redxInc=0;
+                    redyInc=-2;
+
+                }
+
+            }
+            if(redghostx==480 && redghostx+20<=500 && redghosty==320 && redghosty+40<=360){
+                gowhere=(int)(Math.random()*3+1);
+                if(gowhere==1){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+
+            }
+            if(redghostx==20 && redghostx+20<=40 && redghosty==460 && redghosty+40<=500){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=-2;
+
+                }
+
+            }
+            if(redghostx-20==100 && redghostx+20<=140 && redghosty==460 && redghosty+40<=500){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=-2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+
+            }
+            if(redghostx-20==220 && redghostx+20<=260 && redghosty==460 && redghosty+40<=500){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=-2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+
+            }
+            if(redghostx-20==340 && redghostx+20<=380 && redghosty==460 && redghosty+40<=500){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=-2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+
+            }
+            if(redghostx==480 && redghostx+20<=500 && redghosty==460 && redghosty+40<=500){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=-2;
+
+                }
+
+            }
+        pinkghostx+=pinkxInc;
+        pinkghosty+=pinkyInc;
+        blueghostx+=bluexInc;
+        blueghosty+=blueyInc;
+        orangeghostx+=orangexInc;
+        orangeghosty+=orangeyInc;
+        redghostx+=redxInc;
+        redghosty+=redyInc;
+       if(level==5){
+            g.drawImage(image3,0,0,500,500,this);
+        }
+        if(level==4){
+            setBackground(Color.WHITE);
+            g.drawImage(image3,0,0,500,500,this); 
+        }
+       if(level==6){
+            setBackground(Color.BLACK);
+            if(counter==0){     //alternating pacman
+                if(whichway==1){//face right
+                    g.setColor(Color.YELLOW);       
+                    g.fillArc(pacx,pacy,30,30,20,320);   //pacman facing right
+                    g.setColor(Color.BLACK);      //color of eye
+                    g.fillOval(pacx+15,pacy+6,2,2);     // eyeball
+                }
+                else if(whichway==2){// face left
+                    g.setColor(Color.YELLOW);
+                    g.fillArc(pacx,pacy,30,30,200,320);  //pacman facing left
+                    g.setColor(Color.BLACK);      //color of the eye
+                    g.fillOval(pacx+15,pacy+6,2,2);    //eyeball
+                }
+                else if(whichway==3){// face up
+                    g.setColor(Color.YELLOW);
+                    g.fillArc(pacx,pacy,30,30,110,310);  //pacman facing left
+                    g.setColor(Color.BLACK);      //color of the eye
+                    g.fillOval(pacx+22,pacy+20,2,2);    //eyeball
+                }
+                else if(whichway==4){// face down
+                    g.setColor(Color.YELLOW);
+                    g.fillArc(pacx,pacy,30,30,310,290);  //pacman facing left
+                    g.setColor(Color.BLACK);      //color of the eye
+                    g.fillOval(pacx+22,pacy+8,2,2);    //eyeball
+                }
+            }   
+            else{
+                g.setColor(Color.YELLOW);
+                g.fillOval(pacx,pacy,30,30);    //closed mouth
+                g.setColor(Color.BLACK);       //color of eye
+                g.fillOval(pacx+19,pacy+8,2,2);   //eyeball
+            }
+            g.setColor(Color.WHITE);
+            g.fillRect(200,200,20,80);
+            g.fillRect(260,200,20,80);
+            g.fillRect(40,160,60,160);
+            g.fillRect(140,160,80,40);
+            g.fillRect(140,200,60,80);
+            g.fillRect(140,280,80,40);
+            g.fillRect(380,160,80,160);
+            g.fillRect(260,160,80,40);
+            g.fillRect(280,200,60,80);
+            g.fillRect(260,280,80,40);
+            g.fillRect(40,360,60,100);
+            g.fillRect(140,360,80,100);
+            g.fillRect(260,360,80,100);
+            g.fillRect(380,360,80,100);
+            g.fillRect(40,40,60,80);
+            g.fillRect(140,40,80,80);
+            g.fillRect(260,40,80,80);
+            g.fillRect(380,40,80,80);
+            g.setColor(Color.BLUE);
+            Polygon blueGhost=new Polygon();
+            blueGhost.addPoint(blueghostx,blueghosty);
+            blueGhost.addPoint(blueghostx+20,blueghosty+10);
+            blueGhost.addPoint(blueghostx+10,blueghosty+40);
+            blueGhost.addPoint(blueghostx,blueghosty+20);
+            blueGhost.addPoint(blueghostx-10,blueghosty+40);
+            blueGhost.addPoint(blueghostx-20,blueghosty+10);
+            g.fillPolygon(blueGhost);
+            g.setColor(Color.PINK);
+            Polygon pinkGhost=new Polygon();
+            pinkGhost.addPoint(pinkghostx,pinkghosty);
+            pinkGhost.addPoint(pinkghostx+20,pinkghosty+10);
+            pinkGhost.addPoint(pinkghostx+10,pinkghosty+40);
+            pinkGhost.addPoint(pinkghostx,pinkghosty+20);
+            pinkGhost.addPoint(pinkghostx-10,pinkghosty+40);
+            pinkGhost.addPoint(pinkghostx-20,pinkghosty+10);
+            g.fillPolygon(pinkGhost);
+            g.setColor(Color.ORANGE);
+            Polygon orangeGhost=new Polygon();
+            orangeGhost.addPoint(orangeghostx,orangeghosty);
+            orangeGhost.addPoint(orangeghostx+20,orangeghosty+10);
+            orangeGhost.addPoint(orangeghostx+10,orangeghosty+40);
+            orangeGhost.addPoint(orangeghostx,orangeghosty+20);
+            orangeGhost.addPoint(orangeghostx-10,orangeghosty+40);
+            orangeGhost.addPoint(orangeghostx-20,orangeghosty+10);
+            g.fillPolygon(orangeGhost);
+            g.setColor(Color.RED);
+            Polygon redGhost=new Polygon();
+            redGhost.addPoint(redghostx,redghosty);
+            redGhost.addPoint(redghostx+20,redghosty+10);
+            redGhost.addPoint(redghostx+10,redghosty+40);
+            redGhost.addPoint(redghostx,redghosty+20);
+            redGhost.addPoint(redghostx-10,redghosty+40);
+            redGhost.addPoint(redghostx-20,redghosty+10);
+            g.fillPolygon(redGhost);
+            g.setColor(Color.BLACK);
+            g.fillOval(pinkghostx-10,pinkghosty+10,5,5);// left eye of pink ghost
+            g.fillOval(pinkghostx+5,pinkghosty+10,5,5);// right eye of pink ghost
+            g.fillOval(blueghostx-10,blueghosty+10,5,5);// left eye of blue ghost
+            g.fillOval(blueghostx+5,blueghosty+10,5,5);// right eye of blue ghost
+            g.fillOval(orangeghostx-10,orangeghosty+10,5,5);// left eye of orange ghost
+            g.fillOval(orangeghostx+5,orangeghosty+10,5,5);// right eye of orange ghost
+            g.fillOval(redghostx-10,redghosty+10,5,5);// left eye of red ghost
+            g.fillOval(redghostx+5,redghosty+10,5,5);// right eye of red ghost
+            
+            time1=(int)(time*100+.5)/100.0;
+            g.setFont(new Font("default",Font.BOLD,10));        
+            g.drawString("timer="+time,150,180);        
+            time1+=.01; 
+            g.drawString("Pacx="+pacx,400,420);
+            g.drawString("Pacy="+pacy,400,440);
+            if(level==6 && time1>45){
+                level=7;
+            }
+            //right side of ghost collisons
+            if(pacx<blueghostx && pacx+30-(blueghostx-20)>=0 && pacy>blueghosty && pacy<=blueghosty+40){
+                level=5;
+
+            }
+            if(pacx<pinkghostx && pacx+30-(pinkghostx-20)>=0 && pacy>pinkghosty && pacy<=pinkghosty+40){
+                level=5;
+
+            }
+            if(pacx<orangeghostx && pacx+30-(orangeghostx-20)>=0 && pacy>orangeghosty && pacy<=orangeghosty+40){
+                level=5;
+
+            }
+            if(pacx<redghostx && pacx+30-(redghostx-20)>=0 && pacy>redghosty && pacy<=redghosty+40){
+                level=5;
+
+            }
+            //left side of ghost collisons
+            if(pacx>blueghostx && pacx+30-(blueghostx-20)<=0 && pacy>blueghosty && pacy<=blueghosty+40){
+                level=5;
+            }
+            if(pacx>pinkghostx && pacx+30-(pinkghostx-20)<=0 && pacy>pinkghosty && pacy<=pinkghosty+40){
+                level=5;
+
+            }
+            if(pacx>orangeghostx && pacx+30-(orangeghostx-20)<=0 && pacy>orangeghosty && pacy<=orangeghosty+40){
+                level=5;
+
+            }
+            if(pacx>redghostx && pacx+30-(redghostx-20)<=0 && pacy>redghosty && pacy<=redghosty+40){
+                level=5;
+
+            }
+            // head of  ghost collisons
+            if(pacx>=blueghostx-20 && pacx<=blueghostx+20 && pacy+30==blueghosty && pacy>=blueghosty+40){
+                level=5;
+
+            }
+            if(pacx>=pinkghostx-20 && pacx<=pinkghosty+20 && pacy+30==pinkghosty && pacy>=pinkghosty+40){
+                level=5;
+
+            }
+            if(pacx>=orangeghostx-20 && pacx<=orangeghosty+20 && pacy+30==orangeghosty && pacy>=orangeghosty+40){
+                level=5;
+
+            }
+            if(pacx>=redghostx-20 && pacx<=redghosty+20 && pacy+30==redghosty && pacy>=redghosty+40){
+                level=5;
+
+            }
+            //bottom of ghost collison
+            if(pacx>=blueghostx-20 && pacx<=blueghosty+20 && pacy==blueghosty+40){
+                level=5;
+
+            }
+            if(pacx>=pinkghostx-20 && pacx<=pinkghosty+20 && pacy==pinkghosty+40){
+                level=5;
+
+            }
+            if(pacx>=orangeghostx-20 && pacx<=orangeghosty+20 && pacy==orangeghosty+40){
+                level=5;
+
+            }
+            if(pacx>=redghostx-20 && pacx<=redghosty+20  && pacy==redghosty+40){
+                level=5;
+
+            }
+            //paramters for walls
+            if(pacy>470){
+                pacy-=5;
+            }
+            if(pacy<0){
+                pacy+=5;
+            }
+            if(pacx<0){
+                pacx+=5;
+            }
+            if(pacx>470){
+                pacx-=5;
+            }
+            if(pacx>15 && pacx<95 && pacy==15){
+                pacy-=5;
+            }
+            if(pacx>15 && pacx<95 && pacy==315){
+                pacy+=5;
+            }
+            if(pacy>15 && pacy<115 && pacx==15){
+                pacx-=5;
+            }
+            if(pacx>15 && pacx<95 && pacy==115){
+                pacy+=5;
+            }
+            if(pacy>15 && pacy<115 && pacx==95){
+                pacx+=5;
+            }
+            if(pacx>115 && pacx<215 && pacy==15){
+                pacy-=5;
+            }
+            if(pacy>15 && pacy<115 && pacx==115){
+                pacx-=5;
+            }
+            if(pacy>15 && pacy<115 && pacx==215){
+                pacx+=5;
+            }
+            if(pacx>115 && pacx<215 && pacy==115){
+                pacy+=5;
+            }
+            if(pacx>235 && pacx<335 && pacy==115){
+                pacy+=5;
+            }
+            if(pacx>355 && pacx<455 && pacy==115){
+                pacy+=5;
+            }
+            if(pacy>15 && pacy<115 && pacx==235){
+                pacx-=5;
+            }
+            if(pacy>15 && pacy<115 && pacx==355){
+                pacx-=5;
+            }
+            if(pacx>235 && pacx<335 && pacy==15){
+                pacy-=5;
+            }
+            if(pacx>355 && pacx<455 && pacy==15){
+                pacy-=5;
+            }
+            if(pacy>15 && pacy<115 && pacx==335){
+                pacx+=5;
+            }
+            if(pacy>15 && pacy<115 && pacx==455){
+                pacx+=5;
+            }
+            if(pacy>135 && pacy<315 && pacx==15){
+                pacx-=5;
+            }
+            if(pacy>135 && pacy<315 && pacx==115){
+                pacx-=5;
+            }
+            if(pacy>135 && pacy<315 && pacx==235){
+                pacx-=5;
+            }
+            if(pacy>135 && pacy<315 && pacx==355){
+                pacx-=5;
+            }
+            if(pacx>15 && pacx<95 && pacy==135){
+                pacy-=5;
+            }
+            if(pacx>115 && pacx<215 && pacy==135){
+                pacy-=5;
+            }
+            if(pacx>235 && pacx<335 && pacy==135){
+                pacy-=5;
+            }
+            if(pacx>355 && pacx<455 && pacy==135){
+                pacy-=5;
+            }
+            if(pacy>135 && pacy<315 && pacx==95){
+                pacx+=5;
+            }
+            if(pacy>135 && pacy<315 && pacx==215){
+                pacx+=5;
+            }
+            if(pacy>135 && pacy<315 && pacx==335){
+                pacx+=5;
+            }
+            if(pacy>135 && pacy<315 && pacx==455){
+                pacx+=5;
+            }
+            if(pacx>115 && pacx<215 && pacy==315){
+                pacy+=5;
+            }
+            if(pacx>235 && pacx<335 && pacy==315){
+                pacy+=5;
+            }
+            if(pacx>355 && pacx<455 && pacy==315){
+                pacy+=5;
+            }
+            if(pacy>335 && pacy<455 && pacx==15){
+                pacx-=5;
+            }
+            if(pacy>335 && pacy<455 && pacx==115){
+                pacx-=5;
+            }
+            if(pacy>335 && pacy<455 && pacx==235){
+                pacx-=5;
+            }
+            if(pacy>335 && pacy<455 && pacx==355){
+                pacx-=5;
+            }
+            if(pacy>335 && pacy<455 && pacx==95){
+                pacx+=5;
+            }
+            if(pacy>335 && pacy<455 && pacx==215){
+                pacx+=5;
+            }
+            if(pacy>335 && pacy<455 && pacx==455){
+                pacx+=5;
+            }
+            if(pacx>15 && pacx<95 && pacy==335){
+                pacy-=5;
+            }
+            if(pacx>115 && pacx<215 && pacy==335){
+                pacy-=5;
+            }
+            if(pacx>235 && pacx<340 && pacy==335){
+                pacy-=5;
+            }
+            if(pacx>355 && pacx<455 && pacy==335){
+                pacy-=5;
+            }
+            if(pacx>15 && pacx<95 && pacy==455){
+                pacy+=5;
+            }
+            if(pacx>115 && pacx<215 && pacy==455){
+                pacy+=5;
+            }
+            if(pacx>235 && pacx<335 && pacy==455){
+                pacy+=5;
+            }
+            if(pacy>335 && pacy<455 && pacx==335){
+                pacx+=5;
+            }
+            if(pacx>355 && pacx<455 && pacy==455){
+                pacy+=5;
+            }
+        
+       
+        //random movement for pink ghost at every intersection
+       if(pinkghostx==20 && pinkghostx+20<=40 && pinkghosty==0 && pinkghosty+40<=40){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                
+                
+            }
+            if(pinkghostx-20==100 && pinkghostx+20<=140 && pinkghosty==0 && pinkghosty+40<=40){
+                gowhere=(int)(Math.random()*3+1);
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+            
+            }
+            if(pinkghostx-20==220 && pinkghostx+20<=260 && pinkghosty==0 && pinkghosty+40<=40){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+            
+            }
+            if(pinkghostx-20==340 && pinkghostx+20<=380 && pinkghosty==0 && pinkghosty+40<=40){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+            
+            }
+            if(pinkghostx==480 && pinkghostx+20<=500 && pinkghosty==0 && pinkghosty+40<=40){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                
+                
+            }
+            if(pinkghostx-20==0 && pinkghostx+20<=40 && pinkghosty==120 && pinkghosty+40<=160){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                
+                
+            }
+            if(pinkghostx-20==100 && pinkghostx+20<=140 && pinkghosty==120 && pinkghosty+40<=160){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==4){
+                    pinkxInc=0;
+                    pinkyInc=-2;
+
+                }
+            
+            }
+            if(pinkghostx-20==220 && pinkghostx+20<=260 && pinkghosty==120 && pinkghosty+40<=160){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==4){
+                    pinkxInc=0;
+                    pinkyInc=-2;
+
+                }
+            
+            }
+            if(pinkghostx-20==340 && pinkghostx+20<=380 && pinkghosty==120 && pinkghosty+40<=160){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==4){
+                    pinkxInc=0;
+                    pinkyInc=-2;
+
+                }
+
+            
+            }
+            if(pinkghostx==480 && pinkghostx+20<=500 && pinkghosty==120 && pinkghosty+40<=160){
+                gowhere=(int)(Math.random()*3+1);
+                if(gowhere==1){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                
+                
+            }
+            if(pinkghostx-20==0 && pinkghostx+20<=40 && pinkghosty==320 && pinkghosty+40<=360){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                
+             
+            }
+            if(pinkghostx-20==100 && pinkghostx+20<=140 && pinkghosty==320 && pinkghosty+40<=360){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==4){
+                    pinkxInc=0;
+                    pinkyInc=-2;
+
+                }
+            
+            }
+            if(pinkghostx-20==220 && pinkghostx+20<=260 && pinkghosty==320 && pinkghosty+40<=360){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==4){
+                    pinkxInc=0;
+                    pinkyInc=-2;
+
+                }
+            
+            }
+            if(pinkghostx-20==340 && pinkghostx+20<=380 && pinkghosty==320 && pinkghosty+40<=360){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==4){
+                    pinkxInc=0;
+                    pinkyInc=-2;
+
+                }
+
+            
+            }
+            if(pinkghostx==480 && pinkghostx+20<=500 && pinkghosty==320 && pinkghosty+40<=360){
+                gowhere=(int)(Math.random()*3+1);
+                if(gowhere==1){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=0;
+                    pinkyInc=2;
+
+                }
+                
+                
+            }
+            if(pinkghostx==20 && pinkghostx+20<=40 && pinkghosty==460 && pinkghosty+40<=500){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=-2;
+
+                }
+                
+                
+            }
+            if(pinkghostx-20==100 && pinkghostx+20<=140 && pinkghosty==460 && pinkghosty+40<=500){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=-2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+            
+            }
+            if(pinkghostx-20==220 && pinkghostx+20<=260 && pinkghosty==460 && pinkghosty+40<=500){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=-2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+            
+            }
+            if(pinkghostx-20==340 && pinkghostx+20<=380 && pinkghosty==460 && pinkghosty+40<=500){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    pinkxInc=2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=-2;
+
+                }
+                else if(gowhere==3){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+            
+            }
+            if(pinkghostx==480 && pinkghostx+20<=500 && pinkghosty==460 && pinkghosty+40<=500){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    pinkxInc=-2;
+                    pinkyInc=0;
+
+                }
+                else if(gowhere==2){
+                    pinkxInc=0;
+                    pinkyInc=-2;
+
+                }
+                
+                
+            }
+            if(blueghostx==20 && blueghostx+20<=40 && blueghosty==0 && blueghosty+40<=40){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                
+                
+            }
+            
+            if(blueghostx-20==100 && blueghostx+20<=140 && blueghosty==0 && blueghosty+40<=40){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+            
+            }
+            if(blueghostx-20==220 && blueghostx+20<=260 && blueghosty==0 && blueghosty+40<=40){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+            
+            }
+            if(blueghostx-20==340 && blueghostx+20<=380 && blueghosty==0 && blueghosty+40<=40){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+            
+            }
+            if(blueghostx==480 && blueghostx+20<=500 && blueghosty==0 && blueghosty+40<=40){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                
+                
+            }
+            if(blueghostx-20==0 && blueghostx+20<=40 && blueghosty==120 && blueghosty+40<=160){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                
+                
+            }
+            if(blueghostx-20==100 && blueghostx+20<=140 && blueghosty==120 && blueghosty+40<=160){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==4){
+                    bluexInc=0;
+                    blueyInc=-2;
+
+                }
+            
+            }
+            if(blueghostx-20==220 && blueghostx+20<=260 && blueghosty==120 && blueghosty+40<=160){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==4){
+                    bluexInc=0;
+                    blueyInc=-2;
+
+                }
+            
+            }
+            if(blueghostx-20==340 && blueghostx+20<=380 && blueghosty==120 && blueghosty+40<=160){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==4){
+                    bluexInc=0;
+                    blueyInc=-2;
+
+                }
+
+            
+            }
+            if(blueghostx==480 && blueghostx+20<=500 && blueghosty==120 && blueghosty+40<=160){
+                gowhere=(int)(Math.random()*3+1);
+                if(gowhere==1){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                
+                
+            }
+            if(blueghostx-20==0 && blueghostx+20<=40 && blueghosty==320 && blueghosty+40<=360){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                
+                
+            }
+            if(blueghostx-20==100 && blueghostx+20<=140 && blueghosty==320 && blueghosty+40<=360){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==4){
+                    bluexInc=0;
+                    blueyInc=-2;
+
+                }
+            
+            }
+            if(blueghostx-20==220 && blueghostx+20<=260 && blueghosty==320 && blueghosty+40<=360){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==4){
+                    bluexInc=0;
+                    blueyInc=-2;
+
+                }
+            
+            }
+            if(blueghostx-20==340 && blueghostx+20<=380 && blueghosty==320 && blueghosty+40<=360){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==4){
+                    bluexInc=0;
+                    blueyInc=-2;
+
+                }
+
+            
+            }
+            if(blueghostx==480 && blueghostx+20<=500 && blueghosty==320 && blueghosty+40<=360){
+                gowhere=(int)(Math.random()*3+1);
+                if(gowhere==1){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=0;
+                    blueyInc=2;
+
+                }
+                
+                
+            }
+            if(blueghostx==20 && blueghostx+20<=40 && blueghosty==460 && blueghosty+40<=500){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=-2;
+
+                }
+                
+                
+            }
+            if(blueghostx-20==100 && blueghostx+20<=140 && blueghosty==460 && blueghosty+40<=500){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=-2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+            
+            }
+            if(blueghostx-20==220 && blueghostx+20<=260 && blueghosty==460 && blueghosty+40<=500){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=-2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+            
+            }
+            if(blueghostx-20==340 && blueghostx+20<=380 && blueghosty==460 && blueghosty+40<=500){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    bluexInc=2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=-2;
+
+                }
+                else if(gowhere==3){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+            
+            }
+            if(blueghostx==480 && blueghostx+20<=500 && blueghosty==460 && blueghosty+40<=500){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    bluexInc=-2;
+                    blueyInc=0;
+
+                }
+                else if(gowhere==2){
+                    bluexInc=0;
+                    blueyInc=-2;
+
+                }
+                
+                
+            }if(orangeghostx==20 && orangeghostx+20<=40 && orangeghosty==0 && orangeghosty+40<=40){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+
+            }
+            if(orangeghostx-20==100 && orangeghostx+20<=140 && orangeghosty==0 && orangeghosty+40<=40){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+
+            }
+            if(orangeghostx-20==220 && orangeghostx+20<=260 && orangeghosty==0 && orangeghosty+40<=40){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+
+            }
+            if(orangeghostx-20==340 && orangeghostx+20<=380 && orangeghosty==0 && orangeghosty+40<=40){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+
+            }
+            if(orangeghostx==480 && orangeghostx+20<=500 && orangeghosty==0 && orangeghosty+40<=40){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+
+            }
+            if(orangeghostx-20==0 && orangeghostx+20<=40 && orangeghosty==120 && orangeghosty+40<=160){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+
+            }
+            if(orangeghostx-20==100 && orangeghostx+20<=140 && orangeghosty==120 && orangeghosty+40<=160){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==4){
+                    orangexInc=0;
+                    orangeyInc=-2;
+
+                }
+
+            }
+            if(orangeghostx-20==220 && orangeghostx+20<=260 && orangeghosty==120 && orangeghosty+40<=160){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==4){
+                    orangexInc=0;
+                    orangeyInc=-2;
+
+                }
+
+            }
+            if(orangeghostx-20==340 && orangeghostx+20<=380 && orangeghosty==120 && orangeghosty+40<=160){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==4){
+                    orangexInc=0;
+                    orangeyInc=-2;
+
+                }
+
+            }
+            if(orangeghostx==480 && orangeghostx+20<=500 && orangeghosty==120 && orangeghosty+40<=160){
+                gowhere=(int)(Math.random()*3+1);
+                if(gowhere==1){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+
+            }
+            if(orangeghostx-20==0 && orangeghostx+20<=40 && orangeghosty==320 && orangeghosty+40<=360){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+
+            }
+            if(orangeghostx-20==100 && orangeghostx+20<=140 && orangeghosty==320 && orangeghosty+40<=360){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==4){
+                    orangexInc=0;
+                    orangeyInc=-2;
+
+                }
+
+            }
+            if(orangeghostx-20==220 && orangeghostx+20<=260 && orangeghosty==320 && orangeghosty+40<=360){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==4){
+                    orangexInc=0;
+                    orangeyInc=-2;
+
+                }
+
+            }
+            if(orangeghostx-20==340 && orangeghostx+20<=380 && orangeghosty==320 && orangeghosty+40<=360){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==4){
+                    orangexInc=0;
+                    orangeyInc=-2;
+
+                }
+
+            }
+            if(orangeghostx==480 && orangeghostx+20<=500 && orangeghosty==320 && orangeghosty+40<=360){
+                gowhere=(int)(Math.random()*3+1);
+                if(gowhere==1){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=0;
+                    orangeyInc=2;
+
+                }
+
+            }
+            if(orangeghostx==20 && orangeghostx+20<=40 && orangeghosty==460 && orangeghosty+40<=500){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=-2;
+
+                }
+
+            }
+            if(orangeghostx-20==100 && orangeghostx+20<=140 && orangeghosty==460 && orangeghosty+40<=500){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=-2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+
+            }
+            if(orangeghostx-20==220 && orangeghostx+20<=260 && orangeghosty==460 && orangeghosty+40<=500){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=-2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+
+            }
+            if(orangeghostx-20==340 && orangeghostx+20<=380 && orangeghosty==460 && orangeghosty+40<=500){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    orangexInc=2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=-2;
+
+                }
+                else if(gowhere==3){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+
+            }
+            if(orangeghostx==480 && orangeghostx+20<=500 && orangeghosty==460 && orangeghosty+40<=500){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    orangexInc=-2;
+                    orangeyInc=0;
+
+                }
+                else if(gowhere==2){
+                    orangexInc=0;
+                    orangeyInc=-2;
+
+                }
+
+            }
+            if(redghostx==20 && redghostx+20<=40 && redghosty==0 && redghosty+40<=40){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+
+            }
+            if(redghostx-20==100 && redghostx+20<=140 && redghosty==0 && redghosty+40<=40){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+
+            }
+            if(redghostx-20==220 && redghostx+20<=260 && redghosty==0 && redghosty+40<=40){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+
+            }
+            if(redghostx-20==340 && redghostx+20<=380 && redghosty==0 && redghosty+40<=40){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+
+            }
+            if(redghostx==480 && redghostx+20<=500 && redghosty==0 && redghosty+40<=40){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+
+            }
+            if(redghostx-20==0 && redghostx+20<=40 && redghosty==120 && redghosty+40<=160){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+
+            }
+            if(redghostx-20==100 && redghostx+20<=140 && redghosty==120 && redghosty+40<=160){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==4){
+                    redxInc=0;
+                    redyInc=-2;
+
+                }
+
+            }
+            if(redghostx-20==220 && redghostx+20<=260 && redghosty==120 && redghosty+40<=160){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==4){
+                    redxInc=0;
+                    redyInc=-2;
+
+                }
+
+            }
+            if(redghostx-20==340 && redghostx+20<=380 && redghosty==120 && redghosty+40<=160){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==4){
+                    redxInc=0;
+                    redyInc=-2;
+
+                }
+
+            }
+            if(redghostx==480 && redghostx+20<=500 && redghosty==120 && redghosty+40<=160){
+                gowhere=(int)(Math.random()*3+1);
+                if(gowhere==1){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+
+            }
+            if(redghostx-20==0 && redghostx+20<=40 && redghosty==320 && redghosty+40<=360){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+
+            }
+            if(redghostx-20==100 && redghostx+20<=140 && redghosty==320 && redghosty+40<=360){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==4){
+                    redxInc=0;
+                    redyInc=-2;
+
+                }
+
+            }
+            if(redghostx-20==220 && redghostx+20<=260 && redghosty==320 && redghosty+40<=360){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==4){
+                    redxInc=0;
+                    redyInc=-2;
+
+                }
+
+            }
+            if(redghostx-20==340 && redghostx+20<=380 && redghosty==320 && redghosty+40<=360){
+                gowhere=(int)(Math.random()*4+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==4){
+                    redxInc=0;
+                    redyInc=-2;
+
+                }
+
+            }
+            if(redghostx==480 && redghostx+20<=500 && redghosty==320 && redghosty+40<=360){
+                gowhere=(int)(Math.random()*3+1);
+                if(gowhere==1){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=0;
+                    redyInc=2;
+
+                }
+
+            }
+            if(redghostx==20 && redghostx+20<=40 && redghosty==460 && redghosty+40<=500){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=-2;
+
+                }
+
+            }
+            if(redghostx-20==100 && redghostx+20<=140 && redghosty==460 && redghosty+40<=500){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=-2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+
+            }
+            if(redghostx-20==220 && redghostx+20<=260 && redghosty==460 && redghosty+40<=500){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=-2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+
+            }
+            if(redghostx-20==340 && redghostx+20<=380 && redghosty==460 && redghosty+40<=500){
+                gowhere=(int)(Math.random()*3+1);
+
+                if(gowhere==1){
+                    redxInc=2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=-2;
+
+                }
+                else if(gowhere==3){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+
+            }
+            if(redghostx==480 && redghostx+20<=500 && redghosty==460 && redghosty+40<=500){
+                gowhere=(int)(Math.random()*2+1);
+                if(gowhere==1){
+                    redxInc=-2;
+                    redyInc=0;
+
+                }
+                else if(gowhere==2){
+                    redxInc=0;
+                    redyInc=-2;
+
+                }
+
+            }
+        pinkghostx+=pinkxInc;
+        pinkghosty+=pinkyInc;
+        blueghostx+=bluexInc;
+        blueghosty+=blueyInc;
+        orangeghostx+=orangexInc;
+        orangeghosty+=orangeyInc;
+        redghostx+=redxInc;
+        redghosty+=redyInc;
+
+        }
+    }
+}
+
+
+
+
+
